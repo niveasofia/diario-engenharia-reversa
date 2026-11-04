@@ -69,45 +69,6 @@ As principais mudanças foram:
 
 Com essas alterações, o relatório passa a apresentar informações mais próximas da regra de negócio solicitada pela diretoria.
 
-*Observação: foi utilizada a coluna `orderDate` como referência para o período de 2004. Caso o critério seja a data de envio, o filtro deverá utilizar `shippedDate`.*
-
-### 2.3 Testes de validação
-
-Para verificar se a correção funcionou, foram preparados alguns testes:
-
-```sql
--- Verificar os status existentes nos pedidos
-SELECT status, COUNT(*) AS qtd_pedidos
-FROM orders
-GROUP BY status;
-
--- Verificar se existem pedidos com status diferente de Shipped
-SELECT COUNT(*) AS pedidos_nao_enviados
-FROM view_relatorio_financeiro v
-JOIN orders o ON o.orderNumber = v.orderNumber
-WHERE o.status <> 'Shipped';
-
--- Verificar se pedidos cancelados ou retidos aparecem na View
-SELECT COUNT(*) AS pedidos_cancelados_ou_retidos
-FROM view_relatorio_financeiro v
-JOIN orders o ON o.orderNumber = v.orderNumber
-WHERE o.status IN ('Cancelled', 'On Hold');
-
--- Comparar a quantidade de registros da View com os pedidos esperados
-SELECT COUNT(*) AS linhas_na_view
-FROM view_relatorio_financeiro;
-
-SELECT COUNT(*) AS pedidos_shipped_2004
-FROM orders
-WHERE status = 'Shipped'
-AND orderDate >= '2004-01-01'
-AND orderDate < '2005-01-01';
-```
-
-Os resultados esperados são zero pedidos com status diferente de `Shipped` e a mesma quantidade de registros na View e na consulta direta da tabela `orders`.
-
-**Evidências dos testes:** *[inserir prints dos resultados obtidos pela equipe]*
-
 ---
 
 ## 3. Segurança e Abstração das Views
